@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequestMapping("api/v1/person")
 @RestController
@@ -18,14 +19,32 @@ public class PersonController {
         this.personService = personService;
     }
 
+    // api/vi/person with a request body
     @PostMapping
     public void addPerson(@RequestBody Person person) {
         this.personService.addPerson(person);
     }
 
+    // api/vi/person
     @GetMapping
     public List<Person> getAllPeople() {
         return personService.getAllPeople();
     }
 
+    // api/v1/person/{id}
+    @GetMapping(path = "{id}")
+    public Person getPersonById(@PathVariable("id") UUID id) {
+        return personService.getPersonById(id)
+                .orElse(null);
+    }
+
+    @DeleteMapping(path = "{id}")
+    public void deletePersonById(@PathVariable("id") UUID id) {
+        personService.deletePerson(id);
+    }
+
+    @PutMapping(path = "{id}")
+    public void updatePerson(@PathVariable("id") UUID id, @RequestBody Person personToUpdate) {
+        personService.updatePerson(id, personToUpdate);
+    }
 }
